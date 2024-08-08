@@ -84,6 +84,10 @@ public class GameStateContext {
     return professionToGuess;
   }
 
+  public GameState getGameState() {
+    return gameState;
+  }
+
   /**
    * Gets the ID of the rectangle to be guessed.
    *

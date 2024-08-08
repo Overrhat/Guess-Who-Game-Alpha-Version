@@ -265,14 +265,13 @@ public class CrimeroomController {
    * @throws ApiProxyException if there is an error communicating with the API proxy
    */
   private ChatMessage runGpt(ChatMessage msg) throws ApiProxyException {
-    // System.out.println("Running GPT for message: " + msg.getContent()); // Debug
     chatCompletionRequest.addMessage(msg);
     try {
       ChatCompletionResult chatCompletionResult = chatCompletionRequest.execute();
       Choice result = chatCompletionResult.getChoices().iterator().next();
+      TextToSpeech.speak(result.getChatMessage().getContent());
       chatCompletionRequest.addMessage(result.getChatMessage());
       appendChatMessage(result.getChatMessage());
-      TextToSpeech.speak(result.getChatMessage().getContent());
       return result.getChatMessage();
     } catch (ApiProxyException e) {
       e.printStackTrace();
@@ -289,6 +288,12 @@ public class CrimeroomController {
    */
   @FXML
   private void onSendMessage(ActionEvent event) throws ApiProxyException, IOException {
+    if (context.getGameState() == context.getGameOverState()
+        || timesUp
+        || context.getGameState() == context.getGuessingState()) {
+      return;
+    }
+
     String message = inputText.getText().trim();
     // System.out.println("User message: " + message); // Debug
     if (message.isEmpty()) {
