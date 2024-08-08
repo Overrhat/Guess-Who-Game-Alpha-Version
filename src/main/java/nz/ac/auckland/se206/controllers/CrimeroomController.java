@@ -125,9 +125,10 @@ public class CrimeroomController {
     try {
       playMedia("/sounds/guessIn10.mp3");
     } catch (URISyntaxException e) {
-      // TODO Auto-generated catch block
+      // Handle exception
       e.printStackTrace();
     }
+
     context.setState(context.getGuessingState());
 
     Timer timer = new Timer();
@@ -135,16 +136,22 @@ public class CrimeroomController {
         new TimerTask() {
           @Override
           public void run() {
+            // Check if the state is already GameOverState
+            if (context.getGameState() == context.getGameOverState()) {
+              return; // Stop the function immediately
+            }
+
             try {
               playMedia("/sounds/timesUp.mp3");
             } catch (URISyntaxException e) {
-              // TODO Auto-generated catch block
+              // Handle exception
               e.printStackTrace();
             }
             context.setState(context.getGameOverState());
           }
         },
-        13000); // 13 seconds delay
+        15000 // 15 seconds delay as there is 5 seconds talking
+        );
   }
 
   // Method to pause the timer
