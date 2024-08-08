@@ -1,7 +1,11 @@
 package nz.ac.auckland.se206.states;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import nz.ac.auckland.se206.App;
 import nz.ac.auckland.se206.GameStateContext;
 import nz.ac.auckland.se206.speech.TextToSpeech;
 
@@ -12,6 +16,7 @@ import nz.ac.auckland.se206.speech.TextToSpeech;
 public class GameOver implements GameState {
 
   private final GameStateContext context;
+  private MediaPlayer mediaPlayer;
 
   /**
    * Constructs a new GameOver state with the given game state context.
@@ -32,11 +37,21 @@ public class GameOver implements GameState {
    */
   @Override
   public void handleRectangleClick(MouseEvent event, String rectangleId) throws IOException {
-    if (rectangleId.equals("rectCashier") || rectangleId.equals("rectWaitress")) {
+    if (rectangleId.equals("caseRec") || rectangleId.equals("pictureRec")) {
       return;
     }
     String clickedProfession = context.getProfession(rectangleId);
-    TextToSpeech.speak("Game Over, you have already guessed! This is the " + clickedProfession);
+    switch (clickedProfession) {
+      case "oldMan":
+        TextToSpeech.speak("Game Over, you have already guessed! This is an innocent old man.");
+        break;
+      case "man":
+        TextToSpeech.speak("Game Over, you have already guessed! This is an innocent young man.");
+        break;
+      case "woman":
+        TextToSpeech.speak("Game Over, you have already guessed! This was a criminal woman.");
+        break;
+    }
   }
 
   /**
@@ -47,6 +62,17 @@ public class GameOver implements GameState {
    */
   @Override
   public void handleGuessClick() throws IOException {
-    TextToSpeech.speak("You have already guessed!");
+    try {
+      playMedia("/sounds/already.mp3");
+    } catch (URISyntaxException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+  }
+
+  private void playMedia(String filePath) throws URISyntaxException {
+    Media introSound = new Media(App.class.getResource(filePath).toURI().toString());
+    mediaPlayer = new MediaPlayer(introSound);
+    mediaPlayer.play();
   }
 }

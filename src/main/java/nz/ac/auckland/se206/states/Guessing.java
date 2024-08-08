@@ -1,7 +1,11 @@
 package nz.ac.auckland.se206.states;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import nz.ac.auckland.se206.App;
 import nz.ac.auckland.se206.GameStateContext;
 import nz.ac.auckland.se206.speech.TextToSpeech;
 
@@ -12,6 +16,7 @@ import nz.ac.auckland.se206.speech.TextToSpeech;
 public class Guessing implements GameState {
 
   private final GameStateContext context;
+  private MediaPlayer mediaPlayer;
 
   /**
    * Constructs a new Guessing state with the given game state context.
@@ -32,16 +37,23 @@ public class Guessing implements GameState {
    */
   @Override
   public void handleRectangleClick(MouseEvent event, String rectangleId) throws IOException {
-    if (rectangleId.equals("rectCashier") || rectangleId.equals("rectWaitress")) {
-      TextToSpeech.speak("You should click on the customers");
+    if (rectangleId.equals("pictureRec") || rectangleId.equals("caseRec")) {
+      try {
+        playMedia("/sounds/suspects.mp3");
+      } catch (URISyntaxException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
       return;
     }
 
-    String clickedProfession = context.getProfession(rectangleId);
+    // String clickedProfession = context.getProfession(rectangleId);
     if (rectangleId.equals(context.getRectIdToGuess())) {
-      TextToSpeech.speak("Correct! You won! This is the " + clickedProfession);
+      TextToSpeech.speak(
+          "Correct! You won! This is the criminal! Thank you for solving the case Dr. Watson.");
     } else {
-      TextToSpeech.speak("You lost! This is the " + clickedProfession);
+      TextToSpeech.speak(
+          "You lost! This was an innocent person. I wish Mr. Holmes was here to solve the case.");
     }
     context.setState(context.getGameOverState());
   }
@@ -54,6 +66,17 @@ public class Guessing implements GameState {
    */
   @Override
   public void handleGuessClick() throws IOException {
-    TextToSpeech.speak("You have already guessed!");
+    try {
+      playMedia("/sounds/already.mp3");
+    } catch (URISyntaxException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+  }
+
+  private void playMedia(String filePath) throws URISyntaxException {
+    Media introSound = new Media(App.class.getResource(filePath).toURI().toString());
+    mediaPlayer = new MediaPlayer(introSound);
+    mediaPlayer.play();
   }
 }
