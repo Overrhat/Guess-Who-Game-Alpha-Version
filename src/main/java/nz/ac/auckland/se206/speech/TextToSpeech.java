@@ -23,9 +23,34 @@ public class TextToSpeech {
    * @param text the text to be converted to speech
    * @throws IllegalArgumentException if the text is null or empty
    */
-  public static void speak(String text) {
+  public static void speak(String text, String profession) {
     if (text == null || text.isEmpty()) {
       throw new IllegalArgumentException("Text should not be null or empty");
+    }
+
+    final Provider provider;
+    final Voice voice;
+
+    switch (profession) {
+      case "oldMan":
+        provider = Provider.GOOGLE; // Set appropriate provider
+        voice = Voice.GOOGLE_EN_AU_STANDARD_D; // Set appropriate voice
+        break;
+
+      case "man":
+        provider = Provider.OPENAI; // Set appropriate provider
+        voice = Voice.OPENAI_ECHO; // Set appropriate voice
+        break;
+
+      case "woman":
+        provider = Provider.OPENAI; // Set appropriate provider
+        voice = Voice.OPENAI_NOVA; // Set appropriate voice
+        break;
+
+      default:
+        provider = Provider.GOOGLE;
+        voice = Voice.GOOGLE_EN_US_STANDARD_H;
+        break;
     }
 
     Task<Void> backgroundTask =
@@ -34,8 +59,6 @@ public class TextToSpeech {
           protected Void call() {
             try {
               ApiProxyConfig config = ApiProxyConfig.readConfig();
-              Provider provider = Provider.GOOGLE;
-              Voice voice = Voice.GOOGLE_EN_US_STANDARD_H;
 
               TextToSpeechRequest ttsRequest = new TextToSpeechRequest(config);
               ttsRequest.setText(text).setProvider(provider).setVoice(voice);

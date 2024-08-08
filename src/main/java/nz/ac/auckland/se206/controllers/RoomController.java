@@ -36,8 +36,8 @@ public class RoomController {
   public void initialize() {
     if (isFirstTimeInit) {
       TextToSpeech.speak(
-          "Chat with the three customers, and guess who is the "
-              + context.getProfessionToGuess());
+          "Chat with the three customers, and guess who is the " + context.getProfessionToGuess(),
+          context.getProfessionToGuess());
       isFirstTimeInit = false;
     }
     lblProfession.setText(context.getProfessionToGuess());

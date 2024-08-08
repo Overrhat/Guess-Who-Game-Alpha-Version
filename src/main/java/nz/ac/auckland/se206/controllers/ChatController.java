@@ -96,7 +96,7 @@ public class ChatController {
       Choice result = chatCompletionResult.getChoices().iterator().next();
       chatCompletionRequest.addMessage(result.getChatMessage());
       appendChatMessage(result.getChatMessage());
-      TextToSpeech.speak(result.getChatMessage().getContent());
+      TextToSpeech.speak(result.getChatMessage().getContent(), profession);
       return result.getChatMessage();
     } catch (ApiProxyException e) {
       e.printStackTrace();

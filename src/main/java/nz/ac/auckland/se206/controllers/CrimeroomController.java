@@ -63,9 +63,6 @@ public class CrimeroomController {
     // Play the intro media
     playMedia("/sounds/intro.mp3");
 
-    // TextToSpeech.speak(
-    //     "You lost! This was an innocent person. I wish Mr. Holmes was here to solve the case.");
-
     // Start the timer
     startTimer();
   }
@@ -147,7 +144,7 @@ public class CrimeroomController {
             context.setState(context.getGameOverState());
           }
         },
-        13000); // 12.5 seconds delay
+        13000); // 13 seconds delay
   }
 
   // Method to pause the timer
@@ -269,7 +266,7 @@ public class CrimeroomController {
     try {
       ChatCompletionResult chatCompletionResult = chatCompletionRequest.execute();
       Choice result = chatCompletionResult.getChoices().iterator().next();
-      TextToSpeech.speak(result.getChatMessage().getContent());
+      TextToSpeech.speak(result.getChatMessage().getContent(), profession);
       chatCompletionRequest.addMessage(result.getChatMessage());
       appendChatMessage(result.getChatMessage());
       return result.getChatMessage();
