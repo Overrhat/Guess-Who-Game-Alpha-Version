@@ -7,7 +7,6 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import nz.ac.auckland.se206.App;
 import nz.ac.auckland.se206.GameStateContext;
-import nz.ac.auckland.se206.speech.TextToSpeech;
 
 /**
  * The GameOver state of the game. Handles interactions after the game has ended, informing the
@@ -15,7 +14,6 @@ import nz.ac.auckland.se206.speech.TextToSpeech;
  */
 public class GameOver implements GameState {
 
-  private final GameStateContext context;
   private MediaPlayer mediaPlayer;
 
   /**
@@ -23,9 +21,7 @@ public class GameOver implements GameState {
    *
    * @param context the context of the game state
    */
-  public GameOver(GameStateContext context) {
-    this.context = context;
-  }
+  public GameOver(GameStateContext context) {}
 
   /**
    * Handles the event when a rectangle is clicked. Informs the player that the game is over and
@@ -40,17 +36,11 @@ public class GameOver implements GameState {
     if (rectangleId.equals("caseRec") || rectangleId.equals("pictureRec")) {
       return;
     }
-    String clickedProfession = context.getProfession(rectangleId);
-    switch (clickedProfession) {
-      case "oldMan":
-        TextToSpeech.speak("Game Over, you have already guessed! This is an innocent old man.");
-        break;
-      case "man":
-        TextToSpeech.speak("Game Over, you have already guessed! This is an innocent young man.");
-        break;
-      case "woman":
-        TextToSpeech.speak("Game Over, you have already guessed! This was a criminal woman.");
-        break;
+    try {
+      playMedia("/sounds/already.mp3");
+    } catch (URISyntaxException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
     }
   }
 

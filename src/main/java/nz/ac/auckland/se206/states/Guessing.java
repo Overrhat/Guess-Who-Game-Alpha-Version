@@ -7,7 +7,6 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import nz.ac.auckland.se206.App;
 import nz.ac.auckland.se206.GameStateContext;
-import nz.ac.auckland.se206.speech.TextToSpeech;
 
 /**
  * The Guessing state of the game. Handles the logic for when the player is making a guess about the
@@ -49,11 +48,17 @@ public class Guessing implements GameState {
 
     // String clickedProfession = context.getProfession(rectangleId);
     if (rectangleId.equals(context.getRectIdToGuess())) {
-      TextToSpeech.speak(
-          "Correct! You won! This is the criminal! Thank you for solving the case Dr. Watson.");
+      try {
+        playMedia("/sounds/won.mp3");
+      } catch (URISyntaxException e) {
+        e.printStackTrace();
+      }
     } else {
-      TextToSpeech.speak(
-          "You lost! This was an innocent person. I wish Mr. Holmes was here to solve the case.");
+      try {
+        playMedia("/sounds/lost.mp3");
+      } catch (URISyntaxException e) {
+        e.printStackTrace();
+      }
     }
     context.setState(context.getGameOverState());
   }

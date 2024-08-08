@@ -25,8 +25,8 @@ public class GameStateContext {
 
   /** Constructs a new GameStateContext and initializes the game states and professions. */
   public GameStateContext() {
-    this.rectIdToGuess = "womanRec"; // Initialize with a default value or appropriate value
-    this.professionToGuess = "woman"; // Initialize with a default value or appropriate value
+    this.rectIdToGuess = "womanRec";
+    this.professionToGuess = "woman";
     this.rectanglesToProfession = new HashMap<>();
     rectanglesToProfession.put("oldManRec", "oldMan");
     rectanglesToProfession.put("manRec", "man");
@@ -37,44 +37,6 @@ public class GameStateContext {
     gameOverState = new GameOver(this);
 
     gameState = gameStartedState; // Initial state
-
-    // gameStartedState = new GameStarted(this);
-    // guessingState = new Guessing(this);
-    // gameOverState = new GameOver(this);
-
-    // gameState = gameStartedState; // Initial state
-    // Map<String, Object> obj = null;
-    // Yaml yaml = new Yaml();
-    // try (InputStream inputStream = GameStateContext.class.getClassLoader()
-    // .getResourceAsStream("data/professions.yaml")) {
-    // if (inputStream == null) {
-    // throw new IllegalStateException("File not found!");
-    // }
-    // obj = yaml.load(inputStream);
-    // } catch (IOException e) {
-    // e.printStackTrace();
-    // }
-
-    // @SuppressWarnings("unchecked")
-    // List<String> professions = (List<String>) obj.get("professions");
-
-    // Random random = new Random();
-    // Set<String> randomProfessions = new HashSet<>();
-    // while (randomProfessions.size() < 3) {
-    // String profession = professions.get(random.nextInt(professions.size()));
-    // randomProfessions.add(profession);
-    // }
-
-    // String[] randomProfessionsArray = randomProfessions.toArray(new String[3]);
-    // rectanglesToProfession = new HashMap<>();
-    // rectanglesToProfession.put("oldManRec", randomProfessionsArray[0]);
-    // rectanglesToProfession.put("manRec", randomProfessionsArray[1]);
-    // rectanglesToProfession.put("womanRec", randomProfessionsArray[2]);
-
-    // int randomNumber = random.nextInt(3);
-    // rectIdToGuess = randomNumber == 0 ? "oldmanRec" : ((randomNumber == 1) ?
-    // "manRec" : "womanRec");
-    // professionToGuess = rectanglesToProfession.get(rectIdToGuess);
   }
 
   /**

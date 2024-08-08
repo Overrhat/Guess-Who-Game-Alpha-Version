@@ -1,9 +1,21 @@
 package nz.ac.auckland.se206.controllers;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.time.Duration;
+import java.time.Instant;
+import java.util.Timer;
+import java.util.TimerTask;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.shape.Rectangle;
 import nz.ac.auckland.apiproxy.chat.openai.ChatCompletionRequest;
 import nz.ac.auckland.apiproxy.chat.openai.ChatCompletionResult;
@@ -15,42 +27,19 @@ import nz.ac.auckland.se206.App;
 import nz.ac.auckland.se206.GameStateContext;
 import nz.ac.auckland.se206.prompts.PromptEngineering;
 import nz.ac.auckland.se206.speech.TextToSpeech;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
-
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.time.Duration;
-import java.time.Instant;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class CrimeroomController {
 
-  @FXML
-  private Label timerLabel;
-  @FXML
-  private Rectangle oldManRec;
-  @FXML
-  private Rectangle manRec;
-  @FXML
-  private Rectangle womanRec;
-  @FXML
-  private Rectangle pictureRec;
-  @FXML
-  private Rectangle caseRec;
-  @FXML
-  private Button guessButton;
-  @FXML
-  private Button sendButton;
-  @FXML
-  private TextArea chatText;
-  @FXML
-  private TextField inputText;
+  @FXML private Label timerLabel;
+  @FXML private Rectangle oldManRec;
+  @FXML private Rectangle manRec;
+  @FXML private Rectangle womanRec;
+  @FXML private Rectangle pictureRec;
+  @FXML private Rectangle caseRec;
+  @FXML private Button guessButton;
+  @FXML private Button sendButton;
+  @FXML private TextArea chatText;
+  @FXML private TextField inputText;
 
   // Timer variables
   private volatile boolean running = true;
@@ -74,7 +63,8 @@ public class CrimeroomController {
     // Play the intro media
     playMedia("/sounds/intro.mp3");
 
-    // TextToSpeech.speak("You must click on the suspects");
+    // TextToSpeech.speak(
+    //     "You lost! This was an innocent person. I wish Mr. Holmes was here to solve the case.");
 
     // Start the timer
     startTimer();
@@ -82,41 +72,44 @@ public class CrimeroomController {
 
   private void startTimer() {
     // Create a new daemon thread for the timer
-    timerThread = new Thread(() -> {
-      Instant endTime = Instant.now().plus(Duration.ofSeconds(totalSeconds));
-      while (running) {
-        if (!paused) {
-          endTime = Instant.now().plus(Duration.ofSeconds(remainingSeconds));
-          while (!paused && running && Instant.now().isBefore(endTime)) {
-            long secondsLeft = Duration.between(Instant.now(), endTime).getSeconds();
-            remainingSeconds = secondsLeft; // Update remaining time
-            Platform.runLater(() -> updateTimerLabel((int) remainingSeconds));
+    timerThread =
+        new Thread(
+            () -> {
+              Instant endTime = Instant.now().plus(Duration.ofSeconds(totalSeconds));
+              while (running) {
+                if (!paused) {
+                  endTime = Instant.now().plus(Duration.ofSeconds(remainingSeconds));
+                  while (!paused && running && Instant.now().isBefore(endTime)) {
+                    long secondsLeft = Duration.between(Instant.now(), endTime).getSeconds();
+                    remainingSeconds = secondsLeft; // Update remaining time
+                    Platform.runLater(() -> updateTimerLabel((int) remainingSeconds));
 
-            // Sleep for 1 second between updates
-            try {
-              Thread.sleep(1000);
-            } catch (InterruptedException e) {
-              Thread.currentThread().interrupt();
-            }
-          }
+                    // Sleep for 1 second between updates
+                    try {
+                      Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                      Thread.currentThread().interrupt();
+                    }
+                  }
 
-          // If the loop ends and time is up
-          if (running && !paused && !timesUp) {
-            Platform.runLater(() -> {
-              timesUp = true;
-              forceGuess();
+                  // If the loop ends and time is up
+                  if (running && !paused && !timesUp) {
+                    Platform.runLater(
+                        () -> {
+                          timesUp = true;
+                          forceGuess();
+                        });
+                  }
+                }
+
+                // Sleep briefly to avoid busy-waiting
+                try {
+                  Thread.sleep(100);
+                } catch (InterruptedException e) {
+                  Thread.currentThread().interrupt();
+                }
+              }
             });
-          }
-        }
-
-        // Sleep briefly to avoid busy-waiting
-        try {
-          Thread.sleep(100);
-        } catch (InterruptedException e) {
-          Thread.currentThread().interrupt();
-        }
-      }
-    });
 
     // Set the thread as a daemon so it exits with the application
     timerThread.setDaemon(true);
@@ -141,18 +134,20 @@ public class CrimeroomController {
     context.setState(context.getGuessingState());
 
     Timer timer = new Timer();
-    timer.schedule(new TimerTask() {
-      @Override
-      public void run() {
-        try {
-          playMedia("/sounds/timesUp.mp3");
-        } catch (URISyntaxException e) {
-          // TODO Auto-generated catch block
-          e.printStackTrace();
-        }
-        context.setState(context.getGameOverState());
-      }
-    }, 13000); // 12.5 seconds delay
+    timer.schedule(
+        new TimerTask() {
+          @Override
+          public void run() {
+            try {
+              playMedia("/sounds/timesUp.mp3");
+            } catch (URISyntaxException e) {
+              // TODO Auto-generated catch block
+              e.printStackTrace();
+            }
+            context.setState(context.getGameOverState());
+          }
+        },
+        13000); // 12.5 seconds delay
   }
 
   // Method to pause the timer
@@ -206,8 +201,7 @@ public class CrimeroomController {
   }
 
   /**
-   * Sets the profession for the chat context and initializes the
-   * ChatCompletionRequest.
+   * Sets the profession for the chat context and initializes the ChatCompletionRequest.
    *
    * @param profession the profession to set
    */
@@ -226,11 +220,12 @@ public class CrimeroomController {
     }
     try {
       ApiProxyConfig config = ApiProxyConfig.readConfig();
-      chatCompletionRequest = new ChatCompletionRequest(config)
-          .setN(1)
-          .setTemperature(0.2)
-          .setTopP(0.5)
-          .setMaxTokens(100);
+      chatCompletionRequest =
+          new ChatCompletionRequest(config)
+              .setN(1)
+              .setTemperature(0.2)
+              .setTopP(0.5)
+              .setMaxTokens(100);
       runGpt(new ChatMessage("system", getSystemPrompt()));
     } catch (ApiProxyException e) {
       e.printStackTrace();
@@ -267,8 +262,7 @@ public class CrimeroomController {
    *
    * @param msg the chat message to process
    * @return the response chat message
-   * @throws ApiProxyException if there is an error communicating with the API
-   *                           proxy
+   * @throws ApiProxyException if there is an error communicating with the API proxy
    */
   private ChatMessage runGpt(ChatMessage msg) throws ApiProxyException {
     // System.out.println("Running GPT for message: " + msg.getContent()); // Debug
@@ -290,9 +284,8 @@ public class CrimeroomController {
    * Sends a message to the GPT model.
    *
    * @param event the action event triggered by the send button
-   * @throws ApiProxyException if there is an error communicating with the API
-   *                           proxy
-   * @throws IOException       if there is an I/O error
+   * @throws ApiProxyException if there is an error communicating with the API proxy
+   * @throws IOException if there is an I/O error
    */
   @FXML
   private void onSendMessage(ActionEvent event) throws ApiProxyException, IOException {
