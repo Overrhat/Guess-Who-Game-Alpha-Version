@@ -30,6 +30,12 @@ import nz.ac.auckland.se206.speech.TextToSpeech;
 
 public class CrimeroomController {
 
+  // Static fields
+  private static GameStateContext context = new GameStateContext();
+
+  // Instance fields
+
+  // FXML annotated UI controls
   @FXML private Label timerLabel;
   @FXML private Rectangle oldManRec;
   @FXML private Rectangle manRec;
@@ -51,9 +57,6 @@ public class CrimeroomController {
 
   // Media player for intro sound
   private MediaPlayer mediaPlayer;
-
-  // Initialize the context
-  private static GameStateContext context = new GameStateContext();
 
   // Variables for chat
   private String profession;
@@ -210,6 +213,7 @@ public class CrimeroomController {
    * @param profession the profession to set
    */
   public void setProfession(String profession) {
+    // Set the profession and display the corresponding chat message
     this.profession = profession;
     switch (this.profession) {
       case "oldMan":
