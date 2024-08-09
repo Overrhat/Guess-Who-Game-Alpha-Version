@@ -53,7 +53,6 @@ public class GameStarted implements GameState {
         try {
           pictureSound = new Media(App.class.getResource(picturePath).toURI().toString());
         } catch (URISyntaxException e) {
-          // TODO Auto-generated catch block
           e.printStackTrace();
         }
         mediaPlayer = new MediaPlayer(pictureSound);
@@ -61,12 +60,11 @@ public class GameStarted implements GameState {
         return;
       case "caseRec":
         // Play the guess media
-        String casePath = "/sounds/case.mp3";
+        String casePath = "/sounds/caseFound.mp3";
         Media caseSound = null;
         try {
           caseSound = new Media(App.class.getResource(casePath).toURI().toString());
         } catch (URISyntaxException e) {
-          // TODO Auto-generated catch block
           e.printStackTrace();
         }
         mediaPlayer = new MediaPlayer(caseSound);
@@ -90,7 +88,6 @@ public class GameStarted implements GameState {
     try {
       guessSound = new Media(App.class.getResource(guessPath).toURI().toString());
     } catch (URISyntaxException e) {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
     mediaPlayer = new MediaPlayer(guessSound);
