@@ -76,10 +76,9 @@ public class CrimeroomController {
     timerThread =
         new Thread(
             () -> {
-              Instant endTime = Instant.now().plus(Duration.ofSeconds(totalSeconds));
               while (running) {
                 if (!paused) {
-                  endTime = Instant.now().plus(Duration.ofSeconds(remainingSeconds));
+                  Instant endTime = Instant.now().plus(Duration.ofSeconds(remainingSeconds));
                   while (!paused && running && Instant.now().isBefore(endTime)) {
                     long secondsLeft = Duration.between(Instant.now(), endTime).getSeconds();
                     remainingSeconds = secondsLeft; // Update remaining time
