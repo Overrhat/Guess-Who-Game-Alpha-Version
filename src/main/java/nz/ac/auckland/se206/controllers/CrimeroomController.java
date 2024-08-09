@@ -346,14 +346,24 @@ public class CrimeroomController {
     }
 
     String message = inputText.getText().trim();
-    // System.out.println("User message: " + message); // Debug
     if (message.isEmpty()) {
       return;
     }
     inputText.clear();
     ChatMessage msg = new ChatMessage("user", message);
-    appendChatMessage(msg);
-    runGpt(msg);
+
+    // Run the GPT call in a separate thread
+    new Thread(
+            () -> {
+              try {
+                runGpt(msg);
+                // Update the UI on the JavaFX Application Thread
+                Platform.runLater(() -> appendChatMessage(msg));
+              } catch (Exception e) {
+                e.printStackTrace();
+              }
+            })
+        .start();
   }
 
   // Method to play media from a given path
