@@ -22,15 +22,15 @@
       <Rectangle fx:id="caseRec" arcHeight="5.0" arcWidth="5.0" fill="#1f93ff00" height="186.0" layoutX="131.0" layoutY="136.0" onMouseClicked="#handleRectangleClick" stroke="TRANSPARENT" strokeType="INSIDE" width="142.0" />
       <Rectangle fx:id="womanRec" arcHeight="5.0" arcWidth="5.0" fill="#1f93ff00" height="244.0" layoutX="328.0" layoutY="93.0" onMouseClicked="#handleRectangleClick" stroke="TRANSPARENT" strokeType="INSIDE" width="65.0" />
       <Rectangle fx:id="manRec" arcHeight="5.0" arcWidth="5.0" fill="#1f93ff00" height="179.0" layoutX="268.0" layoutY="102.0" onMouseClicked="#handleRectangleClick" stroke="TRANSPARENT" strokeType="INSIDE" width="57.0" />
-      <Label layoutX="355.0" prefHeight="34.0" prefWidth="245.0" text="Guess Who? Sherlock Homes" textAlignment="CENTER">
+      <Label layoutX="355.0" prefHeight="34.0" prefWidth="245.0" text="Guess Who? Sherlock Homes" textAlignment="CENTER" textFill="#972929">
          <font>
             <Font name="Arial Black" size="15.0" />
          </font>
       </Label>
       <Button fx:id="guessButton" layoutX="417.0" layoutY="360.0" mnemonicParsing="false" onAction="#handleGuessClick" text="Make a Guess" textAlignment="CENTER" />
-      <Label fx:id="timerLabel" alignment="CENTER" layoutY="4.0" prefHeight="30.0" prefWidth="74.0" text="0">
+      <Label fx:id="timerLabel" alignment="CENTER" layoutY="4.0" prefHeight="30.0" prefWidth="74.0" text="0" textFill="WHITE">
          <font>
-            <Font name="AppleGothic Regular" size="20.0" />
+            <Font name="Arial Bold" size="21.0" />
          </font>
       </Label>
       <TextArea fx:id="chatText" editable="false" layoutX="404.0" layoutY="32.0" prefHeight="284.0" prefWidth="189.0" wrapText="true" />

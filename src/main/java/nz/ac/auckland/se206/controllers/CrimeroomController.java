@@ -192,6 +192,11 @@ public class CrimeroomController {
    */
   @FXML
   private void handleGuessClick(ActionEvent event) throws IOException {
+    // If interacted with no one yet, do nothing
+    if (profession == null) {
+      return;
+    }
+
     pauseTimer();
     context.handleGuessClick();
   }
@@ -213,6 +218,9 @@ public class CrimeroomController {
    * @param profession the profession to set
    */
   public void setProfession(String profession) {
+    // Clean the text area before starting a new chat
+    chatText.clear();
+
     // Set the profession and display the corresponding chat message
     this.profession = profession;
     switch (this.profession) {
