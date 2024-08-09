@@ -181,6 +181,11 @@ public class CrimeroomController {
    */
   @FXML
   private void handleRectangleClick(MouseEvent event) throws IOException {
+    // If sound is playing, turn off the sound
+    if (mediaPlayer != null && mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
+      mediaPlayer.stop();
+    }
+
     Rectangle clickedRectangle = (Rectangle) event.getSource();
     context.handleRectangleClick(event, clickedRectangle.getId());
   }
@@ -196,6 +201,11 @@ public class CrimeroomController {
     // If interacted with no one yet, do nothing
     if (profession == null) {
       return;
+    }
+
+    // If sound is playing, turn off the sound
+    if (mediaPlayer != null && mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
+      mediaPlayer.stop();
     }
 
     pauseTimer();

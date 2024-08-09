@@ -33,13 +33,17 @@ public class GameOver implements GameState {
    */
   @Override
   public void handleRectangleClick(MouseEvent event, String rectangleId) throws IOException {
+    // If sound is playing, turn off the sound
+    if (mediaPlayer != null && mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
+      mediaPlayer.stop();
+    }
+
     if (rectangleId.equals("caseRec") || rectangleId.equals("pictureRec")) {
       return;
     }
     try {
       playMedia("/sounds/already.mp3");
     } catch (URISyntaxException e) {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
   }
@@ -52,10 +56,14 @@ public class GameOver implements GameState {
    */
   @Override
   public void handleGuessClick() throws IOException {
+    // If sound is playing, turn off the sound
+    if (mediaPlayer != null && mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
+      mediaPlayer.stop();
+    }
+
     try {
       playMedia("/sounds/already.mp3");
     } catch (URISyntaxException e) {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
   }
