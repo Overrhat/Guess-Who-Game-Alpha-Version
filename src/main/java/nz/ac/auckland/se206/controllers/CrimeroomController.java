@@ -6,6 +6,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.CompletableFuture;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -242,7 +243,15 @@ public class CrimeroomController {
               .setTemperature(0.2)
               .setTopP(0.5)
               .setMaxTokens(100);
-      runGpt(new ChatMessage("system", getSystemPrompt()));
+      // Run runGpt asynchronously
+      CompletableFuture.runAsync(
+          () -> {
+            try {
+              runGpt(new ChatMessage("system", getSystemPrompt()));
+            } catch (Exception e) {
+              e.printStackTrace();
+            }
+          });
     } catch (ApiProxyException e) {
       e.printStackTrace();
     }
@@ -285,9 +294,25 @@ public class CrimeroomController {
     try {
       ChatCompletionResult chatCompletionResult = chatCompletionRequest.execute();
       Choice result = chatCompletionResult.getChoices().iterator().next();
+
+      // Speak the result message content
       TextToSpeech.speak(result.getChatMessage().getContent(), profession);
+
+      // Add the result message to the chat request
       chatCompletionRequest.addMessage(result.getChatMessage());
-      appendChatMessage(result.getChatMessage());
+
+      // Use Timer to delay the appending of the chat message
+      Timer timer = new Timer();
+      timer.schedule(
+          new TimerTask() {
+            @Override
+            public void run() {
+              appendChatMessage(result.getChatMessage());
+            }
+          },
+          4000 // 4 seconds delay
+          );
+
       return result.getChatMessage();
     } catch (ApiProxyException e) {
       e.printStackTrace();
